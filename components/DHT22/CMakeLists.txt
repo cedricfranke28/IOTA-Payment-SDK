@@ -1,0 +1,7 @@
+set(COMPONENT_SRCS
+    DHT22/DHT22.c
+)
+
+set(COMPONENT_ADD_INCLUDEDIRS "${CMAKE_CURRENT_LIST_DIR}/DHT22")
+
+register_component()

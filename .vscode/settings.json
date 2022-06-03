@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "*.ttinclude": "csharp",
+        "*.xmltemplate": "csharp",
+        "*.awltemplate": "csharp",
+        "*.xmlinclude": "csharp",
+        "*.awlinclude": "csharp",
+        "st7735.h": "c",
+        "wallet.h": "c",
+        "bip39.h": "c",
+        "mywallet.h": "c"
+    }
+}

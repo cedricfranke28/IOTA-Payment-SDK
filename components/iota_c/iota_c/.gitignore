@@ -1,0 +1,16 @@
+# Bazel
+bazel-*
+user.bazelrc
+
+# CMake
+build
+
+# VS Code 
+.vscode
+
+# CLion
+.idea
+
+# Sphinx build dir
+docs/_build
+docs/doxygen_build

@@ -1,0 +1,160 @@
+menu "IOTA Wallet"
+
+    menu "WiFi"
+        config ESP_WIFI_SSID
+            string "WiFi SSID"
+            default "myssid"
+            help
+                SSID (network name) for the example to connect to.
+
+        config ESP_WIFI_PASSWORD
+            string "WiFi Password"
+            default "mypassword"
+            help
+                WiFi password (WPA or WPA2) for the example to use.
+
+        config ESP_MAXIMUM_RETRY
+            int "Maximum retry"
+            default 5
+            help
+                Set the Maximum retry to avoid station reconnecting to the AP unlimited when the AP is really inexistent.
+    endmenu
+
+    menu "SNTP"
+        config SNTP_SERVER
+            string "SNTP server"
+            default "pool.ntp.org"
+            help
+                Endpoint of Network Time Protocol server.
+
+        config SNTP_TZ
+            string "Timezone"
+            default "CST-8"
+            help
+                POSIX timezone. Ref: https://github.com/nayarsystems/posix_tz_db/blob/master/zones.json
+    endmenu
+
+    menu "Event Config"
+
+        config EVENTS_HOST
+            string "Events Node URL"
+            default "mqtt.lb-0.h.chrysalis-devnet.iota.cafe"
+            help
+                Iota events node url
+
+        config EVENTS_PORT
+            int "Events Port"
+            default 1883
+            help
+                Iota events port
+
+        config EVENTS_CLIENT_ID
+            string "Events Client Id"
+            default "iota_test_@123"
+            help
+                Client id for events
+
+        config EVENTS_KEEP_ALIVE
+            int "Events Keep Alive"
+            default 60
+            help
+                Events connection keep alive time in seconds
+
+        config EVENT_MESSAGE_ID
+            string "Message Id"
+            default ""
+            help
+                Message id to querry metadata
+
+        config EVENT_OUTPUT_ID
+            string "Output Id"
+            default ""
+            help
+                Output id to get output payload on state change
+
+        config EVENT_BECH32_ADDRESS
+            string "BECH32 Address"
+            default ""
+            help
+                Bech32 address to get the output payload on the specified address
+
+        config EVENT_ED25519_ADDRESS
+            string "ED25519 Address"
+            default ""
+            help
+                Ed25519 address to get the output payload on the specified address
+
+        config EVENT_TXN_ID
+            string "Transaction Id"
+            default ""
+            help
+                Transaction id to get confirmed message which carried the transaction with the specified transaction id
+
+        config EVENT_INDEX
+            string "Index"
+            default ""
+            help
+                Index to get newly received messages which contain indexation payloads with the specified index parameter
+
+    endmenu
+
+    menu "LCD-Panel"
+        config ENABLE_LCD
+            bool "Enable LCD"
+            default y
+            help
+                Enable using the LCD-Panel
+        
+        config SHOW_BALANCE
+            bool "Show balance"
+            default y
+            help
+                Display the current balance on the LCD-Panel
+    endmenu
+
+    menu "DHT22 temperatur sensor"
+        config DHT22_TEMP
+            bool "Enable DHT22"
+            default y
+            help
+                Enable using the DHT22 sensor, instead of the prebuild temp sensor.
+    endmenu
+        
+    config IOTA_NODE_URL
+        string "IOTA Node URL"
+        default "https://api.lb-0.h.chrysalis-devnet.iota.cafe/"
+        help
+            The URL of an IOTA node.
+
+    config IOTA_NODE_PORT
+        int "port number"
+        range 0 65535
+        default 443
+        help
+            The API port of the IOTA node.
+
+    config WALLET_MNEMONIC
+        string "Mnemonic"
+        default "random"
+        help
+            The mnemonic sentence of this wallet
+
+    config ENG_MNEMONIC_ONLY
+        bool "English Mnemonic Only"
+        default y
+        help
+            Support English mnemonic only
+
+    config SENSOR_DELAY_SCALE
+        int "Sensor Sampling Period"
+        default 60
+        help
+            The scale of sampling period
+
+    config IOTA_UNIT_TESTS
+        bool "Testing Application"
+        default n
+        help
+            Build unit tests application
+
+endmenu

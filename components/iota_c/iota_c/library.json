@@ -1,0 +1,18 @@
+{
+    "name": "iota_client",
+    "version": "0.0.2",
+    "keywords": "crypto, iota, client",
+    "description": "IOTA C client library",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/iotaledger/iota.c.git",
+        "branch": "dev"
+    },
+    "authors": {
+        "name": "Sam Chen",
+        "email": "sam.chen@iota.org",
+        "maintainer": true
+    },
+    "frameworks": "*",
+    "platforms": "espressif32"
+}

@@ -1,0 +1,30 @@
+#[[
+// Copyright 2020 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+]]
+
+if (NOT __CJSON_INCLUDED)
+  set(__CJSON_INCLUDED TRUE)
+
+  ExternalProject_Add(
+    ext_cjson
+    PREFIX ${PROJECT_BINARY_DIR}/cjson
+    DOWNLOAD_DIR ${PROJECT_BINARY_DIR}/download
+    DOWNLOAD_NAME cjson_v1.7.14.tar.gz
+    URL https://github.com/DaveGamble/cJSON/archive/v1.7.14.tar.gz
+    URL_HASH SHA256=fb50a663eefdc76bafa80c82bc045af13b1363e8f45cec8b442007aef6a41343
+    BUILD_IN_SOURCE TRUE
+    CMAKE_ARGS
+    -DENABLE_CJSON_TEST:STRING=Off
+    -DENABLE_CJSON_UTILS:STRING=Off
+    -DBUILD_SHARED_LIBS:STRING=Off
+    -DCMAKE_INSTALL_PREFIX:STRING=${CMAKE_INSTALL_PREFIX}
+    -DCMAKE_C_COMPILER:FILEPATH=${CMAKE_C_COMPILER}
+    -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+    # -DCMAKE_TOOLCHAIN_FILE:STRING=${CMAKE_TOOLCHAIN_FILE}
+    # for debug
+    # LOG_DOWNLOAD 1
+    # LOG_CONFIGURE 1
+    # LOG_INSTALL 1
+  )
+endif()
