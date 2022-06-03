@@ -1,16 +1,16 @@
 // Copyright 2021 IOTA Stiftung
+// Copyright 2022 Cedric Franke
 // SPDX-License-Identifier: Apache-2.0
 
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "../components/DHT22/DHT22/DHT22.h"
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "sdkconfig.h"
 #include "sensor.h"
-#include "../components/DHT22/DHT22/DHT22.h"
-
 
 #if CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32C3
 #include "driver/temp_sensor.h"
@@ -19,11 +19,11 @@
 #define ENABLE_TEMP 0
 #endif
 
-//DHT22 Config
+// DHT22 Config
 #if CONFIG_DHT22_TEMP
-  #define ENABLE_DHT22_TEMP 1
+#define ENABLE_DHT22_TEMP 1
 #else
-  #define ENABLE_DHT22_TEMP 0
+#define ENABLE_DHT22_TEMP 0
 #endif
 
 static const char *TAG = "TempSensor";
@@ -61,24 +61,24 @@ float get_temp() {
 }
 
 void init_dht_tempsensor() {
-  #if ENABLE_DHT22_TEMP
-    ESP_LOGI(TAGDHT, "Initializing DHT22 Temperature Sensor");
-    void setDHTgpio(dhtpin);
-  #else
-    ESP_LOGE(TAGDHT, "DHT22 Temperature is not enabled on this hardware");
-  #endif
+#if ENABLE_DHT22_TEMP
+  ESP_LOGI(TAGDHT, "Initializing DHT22 Temperature Sensor");
+  void setDHTgpio(dhtpin);
+#else
+  ESP_LOGE(TAGDHT, "DHT22 Temperature is not enabled on this hardware");
+#endif
 }
 
 float get_dht_temp() {
-  #if ENABLE_DHT22_TEMP
-    int ret = readDHT();
+#if ENABLE_DHT22_TEMP
+  int ret = readDHT();
 
-    errorHandler(ret);
+  errorHandler(ret);
 
-    vTaskDelay(3000 / portTICK_RATE_MS);
+  vTaskDelay(3000 / portTICK_RATE_MS);
 
-    return getTemperature();
-  #else
-    ESP_LOGE(TAGDHT, "DHT22 Temperature cant get value");
-  #endif
+  return getTemperature();
+#else
+  ESP_LOGE(TAGDHT, "DHT22 Temperature cant get value");
+#endif
 }

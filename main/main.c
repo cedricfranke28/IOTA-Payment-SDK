@@ -1,4 +1,5 @@
 // Copyright 2021 IOTA Stiftung
+// Copyright 2022 Cedric Franke
 // SPDX-License-Identifier: Apache-2.0
 
 #include <inttypes.h>
@@ -31,10 +32,10 @@
 #include "lwip/sys.h"
 
 #include "cli_wallet.h"
-#include "sensor.h"
 #include "lcd.h"
-#include "myWallet.h"
 #include "led.h"
+#include "myWallet.h"
+#include "sensor.h"
 
 #define APP_WIFI_SSID CONFIG_ESP_WIFI_SSID
 #define APP_WIFI_PWD CONFIG_ESP_WIFI_PASSWORD
@@ -52,7 +53,6 @@ static EventGroupHandle_t s_wifi_event_group;
 static const char* TAG = "main";
 static int s_retry_num = 0;
 
-
 // reboot function, to reboot the system
 static void reboot() {
   for (int i = 20; i >= 0; i--) {
@@ -65,7 +65,7 @@ static void reboot() {
   esp_restart();
 }
 
-//eventhandler, handels the wifi connection
+// eventhandler, handels the wifi connection
 static void event_handler(void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data) {
   if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
     esp_wifi_connect();
@@ -86,7 +86,7 @@ static void event_handler(void* arg, esp_event_base_t event_base, int32_t event_
   }
 }
 
-//wifi init, initialize wifi parameters
+// wifi init, initialize wifi parameters
 void wifi_init(void) {
   s_wifi_event_group = xEventGroupCreate();
 
@@ -146,7 +146,7 @@ void wifi_init(void) {
   vEventGroupDelete(s_wifi_event_group);
 }
 
-//initialize_nvs, initialize Non-volatile storage
+// initialize_nvs, initialize Non-volatile storage
 static void initialize_nvs() {
   esp_err_t err = nvs_flash_init();
   if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
@@ -156,7 +156,7 @@ static void initialize_nvs() {
   ESP_ERROR_CHECK(err);
 }
 
-//dump chipinfo, outputs information about chip, wifi, esp-idf
+// dump chipinfo, outputs information about chip, wifi, esp-idf
 static void dump_chip_info() {
   esp_chip_info_t chip_info;
   esp_chip_info(&chip_info);
@@ -189,7 +189,7 @@ static void initialize_filesystem(void) {
 }
 #endif  // CONFIG_STORE_HISTORY
 
-//update time, to get the current time from timezone
+// update time, to get the current time from timezone
 static void update_time() {
   // init sntp
   ESP_LOGI(TAG, "Initializing SNTP: %s, Timezone: %s", CONFIG_SNTP_SERVER, CONFIG_SNTP_TZ);
@@ -224,38 +224,38 @@ void app_main(void) {
 
   // Print chip information
   dump_chip_info();
-  
-  //lcd panel
+
+  // lcd panel
   lcd_init();
 
-  //lcd fill screen
+  // lcd fill screen
   lcd_fill_screen(COLOR_WHITE);
 
-  //lcd print 
+  // lcd print
   lcd_print(1, 1, COLOR_BLACK, "Init LCD-Panel...");
 
   // wifi setup
   wifi_init();
 
-  //lcd print Wifi SSID
+  // lcd print Wifi SSID
   lcd_print(1, 1, COLOR_BLACK, "SSID: %s ...", CONFIG_ESP_WIFI_SSID);
 
   // temperature sensor
   init_tempsensor();
 
-  //init DHT22
+  // init DHT22
   init_dht_tempsensor();
 
-  //init LED Green
+  // init LED Green
   initGreenLED();
 
-  //init LED Red
+  // init LED Red
   initRedLED();
 
   // get time from sntp
   update_time();
 
-  //lcd print Inititialize Wallet
+  // lcd print Inititialize Wallet
   lcd_print(1, 1, COLOR_BLACK, "Init Wallet...");
 
   // init my Wallet, to initialize Wallet from myWallet.h
@@ -265,19 +265,18 @@ void app_main(void) {
     lcd_print(1, 12, COLOR_RED, "Restart in 5s");
     reboot();
   }
-  
-  //lcd print Wallet Address
-  lcd_print(1,1,COLOR_RED, "Wallet Address    " );
 
-  //lcd display the qr-code with included address
+  // lcd print Wallet Address
+  lcd_print(1, 1, COLOR_RED, "Wallet Address    ");
+
+  // lcd display the qr-code with included address
   lcd_display_qr();
 
-  //Initialize NVS
+  // Initialize NVS
   esp_err_t ret = nvs_flash_init();
-  if (ret == ESP_ERR_NVS_NO_FREE_PAGES)
-  {
-      ESP_ERROR_CHECK(nvs_flash_erase());
-      ret = nvs_flash_init();
+  if (ret == ESP_ERR_NVS_NO_FREE_PAGES) {
+    ESP_ERROR_CHECK(nvs_flash_erase());
+    ret = nvs_flash_init();
   }
   ESP_ERROR_CHECK(ret);
 
@@ -287,18 +286,17 @@ void app_main(void) {
   // lcd print Temp "????" means unvailable
   lcd_print(1, 3, COLOR_MAGENTA, "Temp: ????");
 
-  // get my Address from myWallet.h 
+  // get my Address from myWallet.h
   get_my_Address();
 
-  //uncommend to send IOTA. ! Config reciver Address in myWallet.h
-  //send_my_IOTA();
-  
-  //set my latest balance, to get the current balance
+  // uncommend to send IOTA. ! Config reciver Address in myWallet.h
+  // send_my_IOTA();
+
+  // set my latest balance, to get the current balance
   set_my_LatestBalance();
 
-  while(1)
-  {
-    //get my Balance, to request the current balance and get an payment.
+  while (1) {
+    // get my Balance, to request the current balance and get an payment.
     get_my_Balance();
   }
   reboot();

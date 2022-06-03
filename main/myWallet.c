@@ -1,4 +1,4 @@
-
+// Copyright 2022 Cedric Franke
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -23,14 +23,13 @@
 #include "sdkconfig.h"
 #include "soc/rtc_cntl_reg.h"
 
-
-#include "myWallet.h"
 #include "lcd.h"
-#include "sensor.h"
 #include "led.h"
+#include "myWallet.h"
+#include "sensor.h"
 
-#include "../components/iota_c/iota_c/src/wallet/wallet.h"
 #include "../components/iota_c/iota_c/src/wallet/bip39.h"
+#include "../components/iota_c/iota_c/src/wallet/wallet.h"
 
 static const char *TAG = "mywallet";
 
@@ -43,9 +42,9 @@ uint64_t latest_balance = 0;
 #define APP_NODE_PORT CONFIG_IOTA_NODE_PORT
 
 #if CONFIG_SHOW_BALANCE
-  #define ENABLE_SHOW_BALANCE 1
+#define ENABLE_SHOW_BALANCE 1
 #else
-  #define ENABLE_SHOW_BALANCE 0
+#define ENABLE_SHOW_BALANCE 0
 #endif
 
 static int endpoint_validation(iota_wallet_t *w) {
@@ -114,7 +113,8 @@ int init_my_Wallet() {
   // config wallet
   ESP_LOGI(TAG, "Connect to node: %s:%d tls:%s", mywallet->endpoint.host, mywallet->endpoint.port,
            mywallet->endpoint.use_tls ? "true" : "false");
-  if (wallet_set_endpoint(mywallet, mywallet->endpoint.host, mywallet->endpoint.port, mywallet->endpoint.use_tls) == 0) {
+  if (wallet_set_endpoint(mywallet, mywallet->endpoint.host, mywallet->endpoint.port, mywallet->endpoint.use_tls) ==
+      0) {
     if (wallet_update_bech32HRP(mywallet) != 0) {
       ESP_LOGE(TAG, "update bech32HRP failed");
       wallet_destroy(mywallet);
@@ -130,32 +130,7 @@ int init_my_Wallet() {
   return -1;
 }
 
-void set_my_LatestBalance()
-{
-  uint64_t balance = 0;
-  float lcd_balance = 0;
-
-    if (wallet_balance_by_index(mywallet, 1, 0, &balance) != 0) {
-      printf("Err: get balance failed\n");
-    }
-
-  latest_balance = balance;
-  printf("balance: %" PRIu64 "\n", balance);
-
-  #if ENABLE_SHOW_BALANCE
-    lcd_balance = balance;
-
-    lcd_print(1, 1, COLOR_MAGENTA, "Balance: %.1f Mi", (lcd_balance / 1000000));
-  #else
-    ESP_LOGE(TAG, "Showing balance is not enabled!");
-  #endif
-
-  setGreenLEDOn();
-  setRedLEDOff();
-}
-
-void get_my_Balance()
-{
+void set_my_LatestBalance() {
   uint64_t balance = 0;
   float lcd_balance = 0;
 
@@ -163,8 +138,30 @@ void get_my_Balance()
     printf("Err: get balance failed\n");
   }
 
-  if(balance != latest_balance)
-  {
+  latest_balance = balance;
+  printf("balance: %" PRIu64 "\n", balance);
+
+#if ENABLE_SHOW_BALANCE
+  lcd_balance = balance;
+
+  lcd_print(1, 1, COLOR_MAGENTA, "Balance: %.1f Mi", (lcd_balance / 1000000));
+#else
+  ESP_LOGE(TAG, "Showing balance is not enabled!");
+#endif
+
+  setGreenLEDOn();
+  setRedLEDOff();
+}
+
+void get_my_Balance() {
+  uint64_t balance = 0;
+  float lcd_balance = 0;
+
+  if (wallet_balance_by_index(mywallet, 1, 0, &balance) != 0) {
+    printf("Err: get balance failed\n");
+  }
+
+  if (balance != latest_balance) {
     ESP_LOGI(TAG, "IOTAs were recieved");
 
     setGreenLEDOff();
@@ -172,13 +169,13 @@ void get_my_Balance()
 
     latest_balance = balance;
 
-    #if ENABLE_SHOW_BALANCE
-      lcd_balance = balance;
+#if ENABLE_SHOW_BALANCE
+    lcd_balance = balance;
 
-      lcd_print(1, 1, COLOR_MAGENTA, "Balance: %.1f Mi", (lcd_balance / 1000000));
-    #else
-      ESP_LOGE(TAG, "Showing balance is not enabled!");
-    #endif
+    lcd_print(1, 1, COLOR_MAGENTA, "Balance: %.1f Mi", (lcd_balance / 1000000));
+#else
+    ESP_LOGE(TAG, "Showing balance is not enabled!");
+#endif
 
     vTaskDelay(3000 / portTICK_RATE_MS);
 
@@ -196,29 +193,24 @@ void get_my_Balance()
   }
 }
 
-void get_my_Address()
-{
+void get_my_Address() {
   char tmp_bech32_addr[65];
 
   wallet_bech32_from_index(mywallet, 1, 0, tmp_bech32_addr);
 
-  ESP_LOGI(TAG,"%s", tmp_bech32_addr);
-
+  ESP_LOGI(TAG, "%s", tmp_bech32_addr);
 }
 
-void send_my_IOTA()
-{
+void send_my_IOTA() {
   char msg_id[IOTA_MESSAGE_ID_HEX_BYTES + 1] = {};
   char data[] = "sent from esp32 via iota.c";
   byte_t recv[IOTA_ADDRESS_BYTES] = {};
 
-char const *const recv_addr = "atoi1qr7knpall5the89tyeg06w03grtd3vh7x7vj479mx3eml94wc2wfvzaq2za";
-  
+  char const *const recv_addr = "atoi1qr7knpall5the89tyeg06w03grtd3vh7x7vj479mx3eml94wc2wfvzaq2za";
+
   address_from_bech32(mywallet->bech32HRP, recv_addr, recv);
 
-  wallet_send(mywallet, 1, 0, recv+1, 2000000, "ESP32 Wallet",
-                        (byte_t *)data, sizeof(data), msg_id, sizeof(msg_id));
+  wallet_send(mywallet, 1, 0, recv + 1, 2000000, "ESP32 Wallet", (byte_t *)data, sizeof(data), msg_id, sizeof(msg_id));
 
-  ESP_LOGI(TAG,"Send IOTA to App Wallet");  
-          
+  ESP_LOGI(TAG, "Send IOTA to App Wallet");
 }

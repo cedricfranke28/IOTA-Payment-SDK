@@ -1,5 +1,5 @@
-//Klasse lcd zum betreiben des LCD-Panels
-#pragma once 
+// Copyright 2022 Cedric Franke
+#pragma once
 
 #include <../components/ST7735/ST7735.h>
 

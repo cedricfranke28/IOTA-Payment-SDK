@@ -1,4 +1,5 @@
 // Copyright 2021 IOTA Stiftung
+// Copyright 2022 Cedric Franke
 // SPDX-License-Identifier: Apache-2.0
 
 #pragma once
