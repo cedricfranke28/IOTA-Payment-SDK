@@ -1,5 +1,7 @@
 # IOTA-Payment-SDK by Cedric Franke
 
+!!! README is not finished !!!
+
 ## Declaration
 
 As part of my study work for the DHBW Mosbach, I should implement a payment process with an ESP32 development board and IOTA.
