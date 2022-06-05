@@ -9,6 +9,13 @@ The ESP32-Client-SDK from oopsmonk served as the basis for the project. Thanks f
 
 ![36](https://user-images.githubusercontent.com/62056776/171879678-339ff5a4-0c25-4860-b23b-7c5fc123a995.png)
 
+## Used components
+
+ - DHT22
+ - TFT 1.8" LCD-Panel
+ - ESP32-DevKit-C-V4
+ - Red and green LED
+
 ## Final product
 
 ![37](https://user-images.githubusercontent.com/62056776/171879870-4bd9788b-7229-4259-bbcf-8e93f5ef1c45.png)
